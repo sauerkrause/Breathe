@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class SessionAdapter(private val dataSession: Array<Session>) : RecyclerView.Adapter<SessionAdapter.ViewHolder>() {
+class SessionAdapter(private val dataSession: List<Session>) : RecyclerView.Adapter<SessionAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val inhaleDuration: TextView
         val exhaleDuration: TextView

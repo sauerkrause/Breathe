@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Session(
-    @PrimaryKey val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int,
     val inhaleDuration: Int,
     val exhaleDuration: Int,
     val repetitions: Int,

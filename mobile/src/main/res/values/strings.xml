@@ -4,4 +4,6 @@
     <string name="inhale_duration">Inhale Duration</string>
     <string name="exhale_duration">Exhale Duration</string>
     <string name="repetitions">Repetitions</string>
+    <string name="create_session">Create Session</string>
+    <string name="cancel">Cancel</string>
 </resources>
