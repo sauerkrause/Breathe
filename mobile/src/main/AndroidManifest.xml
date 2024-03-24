@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name=".SessionApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -13,6 +14,9 @@
         android:theme="@style/Theme.Breathe"
         tools:targetApi="31">
         <activity
+            android:name=".BreathSession"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -21,11 +25,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CreateSessionActivity"
+        <activity
+            android:name=".CreateSessionActivity"
             android:exported="false">
             <intent-filter>
-                <action android:name="se.kr4u.breathe.CREATE_SESSION"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="se.kr4u.breathe.CREATE_SESSION" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
     </application>

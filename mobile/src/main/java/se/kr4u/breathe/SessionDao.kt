@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SessionDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertSessions(vararg sessions: Session)
 
     @Update
@@ -21,9 +21,6 @@ interface SessionDao {
 
     @Query("SELECT * FROM session WHERE id = :id")
     suspend fun loadSessionById(id: Int): Session
-
-    @Query("SELECT * FROM session")
-    suspend fun loadAllSessions(): List<Session>
 
     @Query("SELECT * FROM session")
     fun loadSessions(): Flow<List<Session>>

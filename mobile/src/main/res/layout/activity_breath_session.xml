@@ -5,9 +5,9 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".BreathSession">
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/main_toolbar"
+        android:id="@+id/breath_session_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
@@ -17,27 +17,33 @@
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/session_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/add_session"
-        app:layout_constraintTop_toBottomOf="@id/main_toolbar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_session"
+    <TextView
+        android:id="@+id/direction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:elevation="4dp"
-        android:contentDescription="@string/add_session"
-        android:src="@drawable/ic_plus_24"
+        android:textSize="48sp"
+        app:layout_constraintTop_toBottomOf="@id/breath_session_toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/times"
+        />
+    <TextView
+        android:id="@+id/countdown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="96sp"
+        app:layout_constraintTop_toBottomOf="@id/direction"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:useCompatPadding="true"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Breathe.Button.Round"
-        style="@style/Widget.MaterialComponents.Button.Icon"/>
+        />
+    <TextView
+        android:id="@+id/times"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="48sp"
+        app:layout_constraintStart_toEndOf="@id/direction"
+        app:layout_constraintTop_toBottomOf="@id/breath_session_toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

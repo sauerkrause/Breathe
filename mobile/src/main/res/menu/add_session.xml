@@ -2,12 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/cancel"
-        android:icon="@drawable/arrow_back_24"
-        android:title="@string/cancel"
-        app:showAsAction="always"
-        />
-    <item
         android:id="@+id/action_add_session"
         android:icon="@drawable/ic_plus_24"
         android:title="@string/create_session"

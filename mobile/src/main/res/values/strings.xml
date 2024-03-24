@@ -5,5 +5,11 @@
     <string name="exhale_duration">Exhale Duration</string>
     <string name="repetitions">Repetitions</string>
     <string name="create_session">Create Session</string>
+    <string name="breath_session">Breath Session</string>
     <string name="cancel">Cancel</string>
+    <string name="inward">s In</string>
+    <string name="outward">s Out</string>
+    <string name="direction_in">In</string>
+    <string name="direction_out">Out</string>
+    <string name="times">Times</string>
 </resources>

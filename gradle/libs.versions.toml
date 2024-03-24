@@ -9,6 +9,7 @@ appcompat = "1.6.1"
 playServicesWearable = "18.0.0"
 material = "1.10.0"
 activity = "1.8.0"
+fragment = "1.6.0"
 constraintlayout = "2.1.4"
 composeBom = "2023.08.00"
 composeMaterial = "1.2.1"
@@ -16,6 +17,7 @@ composeFoundation = "1.2.1"
 activityCompose = "1.7.2"
 coreSplashscreen = "1.0.1"
 room = "2.6.1"
+lifecycleLivedata="2.7.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -37,6 +39,9 @@ androidx-compose-material = { group = "androidx.wear.compose", name = "compose-m
 androidx-compose-foundation = { group = "androidx.wear.compose", name = "compose-foundation", version.ref = "composeFoundation" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
+androidx-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleLivedata"}
+androidx-lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedata"}
+androidx-fragment = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragment"}
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room"}
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room"}
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room"}

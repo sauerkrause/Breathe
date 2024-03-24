@@ -4,33 +4,64 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 
-class SessionAdapter(private val dataSession: List<Session>) : RecyclerView.Adapter<SessionAdapter.ViewHolder>() {
+class SessionAdapter : ListAdapter<Session, SessionAdapter.ViewHolder>(SessionsComparator()) {
+    var onItemClick: ((Session) -> Unit)? = null
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val inhaleDuration: TextView
-        val exhaleDuration: TextView
-        val repetitions: TextView
+        private val inhaleDuration: TextView = view.findViewById(R.id.inhale_duration)
+        private val exhaleDuration: TextView = view.findViewById(R.id.exhale_duration)
+        private val repetitions: TextView = view.findViewById(R.id.repetitions)
+        private val startSession: MaterialButton = view.findViewById(R.id.start_session)
+        lateinit var sessionEntity: Session
+        var onItemClick: ((Session) -> Unit)? = null
+
         init {
-            inhaleDuration = view.findViewById(R.id.inhale_duration)
-            exhaleDuration = view.findViewById(R.id.exhale_duration)
-            repetitions = view.findViewById(R.id.repetitions)
+            startSession.setOnClickListener {
+                when (it.id) {
+                    R.id.start_session -> {
+                        onItemClick?.invoke(sessionEntity)
+                    }
+                    else -> {}
+                }
+            }
+        }
+        fun bind(session: Session?) {
+            inhaleDuration.text = session?.inhaleDuration.toString()
+            exhaleDuration.text = session?.exhaleDuration.toString()
+            repetitions.text = session?.repetitions.toString()
+            sessionEntity = session!!
+        }
+
+        companion object {
+            fun create(parent: ViewGroup): SessionAdapter.ViewHolder {
+                val view: View = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.session_row_item, parent, false)
+                return SessionAdapter.ViewHolder(view)
+            }
         }
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.session_row_item, viewGroup, false)
-        return ViewHolder(view)
+        return ViewHolder.create(viewGroup)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.inhaleDuration.text = dataSession[position].inhaleDuration.toString()
-        holder.exhaleDuration.text = dataSession[position].exhaleDuration.toString()
-        holder.repetitions.text = dataSession[position].repetitions.toString()
+        val current = getItem(position)
+        holder.bind(current)
+        holder.onItemClick = onItemClick
+    }
+}
+
+class SessionsComparator : DiffUtil.ItemCallback<Session>() {
+    override fun areItemsTheSame(oldItem: Session, newItem: Session): Boolean {
+        return oldItem === newItem
     }
 
-    override fun getItemCount(): Int {
-        return dataSession.size
+    override fun areContentsTheSame(oldItem: Session, newItem: Session): Boolean {
+        return oldItem.exhaleDuration == newItem.exhaleDuration && oldItem.inhaleDuration == newItem.inhaleDuration && oldItem.repetitions == newItem.repetitions
     }
 }
