@@ -10,20 +10,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 
 class SessionAdapter : ListAdapter<Session, SessionAdapter.ViewHolder>(SessionsComparator()) {
-    var onItemClick: ((Session) -> Unit)? = null
+    var onItemClick: ((Session, View) -> Unit)? = null
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val inhaleDuration: TextView = view.findViewById(R.id.inhale_duration)
         private val exhaleDuration: TextView = view.findViewById(R.id.exhale_duration)
         private val repetitions: TextView = view.findViewById(R.id.repetitions)
         private val startSession: MaterialButton = view.findViewById(R.id.start_session)
         lateinit var sessionEntity: Session
-        var onItemClick: ((Session) -> Unit)? = null
+        var onItemClick: ((Session, View) -> Unit)? = null
 
         init {
             startSession.setOnClickListener {
                 when (it.id) {
                     R.id.start_session -> {
-                        onItemClick?.invoke(sessionEntity)
+                        onItemClick?.invoke(sessionEntity, it.parent as View)
                     }
                     else -> {}
                 }

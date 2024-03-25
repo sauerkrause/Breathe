@@ -25,7 +25,7 @@
         android:textSize="36sp"
         app:layout_constraintTop_toBottomOf="@id/breath_session_toolbar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/times"
         />
     <View
         android:id="@+id/pulser"
@@ -57,8 +57,8 @@
         android:layout_height="wrap_content"
         android:transitionName="reps"
         android:textSize="36sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/direction"
+        app:layout_constraintTop_toBottomOf="@id/breath_session_toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         />
 

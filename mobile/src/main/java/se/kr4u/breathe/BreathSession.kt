@@ -3,8 +3,11 @@ package se.kr4u.breathe
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
+import android.view.animation.ScaleAnimation
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -38,6 +41,7 @@ class BreathSession : AppCompatActivity(R.layout.activity_breath_session) {
     private lateinit var directionTextView: TextView
     private lateinit var countdownTextView: TextView
     private lateinit var timesTextView: TextView
+    private lateinit var pulser: View
     private lateinit var actionBar: Toolbar
     private lateinit var job: Deferred<Unit>
 
@@ -46,6 +50,7 @@ class BreathSession : AppCompatActivity(R.layout.activity_breath_session) {
         directionTextView = findViewById(R.id.direction)
         countdownTextView = findViewById(R.id.countdown)
         timesTextView = findViewById(R.id.times)
+        pulser = findViewById(R.id.pulser)
         actionBar = findViewById(R.id.breath_session_toolbar)
         actionBar.setTitle(R.string.breath_session)
         setSupportActionBar(actionBar)
@@ -61,7 +66,7 @@ class BreathSession : AppCompatActivity(R.layout.activity_breath_session) {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
-            finish()
+            onBackPressedDispatcher.onBackPressed()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -83,12 +88,13 @@ class BreathSession : AppCompatActivity(R.layout.activity_breath_session) {
     }
 
     private fun beginInhaleCountdown(duration: Int, repetitions: Int) {
-        directionTextView.text = resources.getText(R.string.direction_in)
+        directionTextView.text = resources.getText(R.string.breathe_in)
         countdownTextView.text = duration.toString()
-        timesTextView.text = repetitions.toString()
+        timesTextView.text = resources.getQuantityString(R.plurals.number_of_repetitions, repetitions, repetitions)
         var count = duration
         var times = repetitions
         var direction = Direction.IN
+        changeDirection(Direction.IN)
         job = CoroutineScope(Dispatchers.Main).launchPeriodicAsync(1000) {
             when (count) {
                 0 -> {
@@ -144,17 +150,29 @@ class BreathSession : AppCompatActivity(R.layout.activity_breath_session) {
 
         directionTextView.text = when (direction) {
             Direction.IN -> {
-                resources.getText(R.string.direction_in)
+                resources.getText(R.string.breathe_in)
             }
 
             Direction.OUT -> {
-                resources.getText(R.string.direction_out)
+                resources.getText(R.string.breathe_out)
             }
         }
-        timesTextView.text = repetitions.toString()
+        timesTextView.text = resources.getQuantityString(R.plurals.number_of_repetitions, repetitions, repetitions)
     }
 
     private fun changeDirection(direction: Direction) {
         // Add sounds and/or vibration here
+
+        // Animate the pulser
+        val pulse = when (direction) {
+            Direction.IN -> ScaleAnimation(1f, 2f, 1f, 2f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
+            Direction.OUT -> ScaleAnimation(2f, 1f, 2f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
+        };
+        pulse.duration = when (direction) {
+            Direction.OUT -> session.exhaleDuration * 1000L
+            Direction.IN -> session.inhaleDuration * 1000L
+        }
+        pulse.fillAfter = true
+        pulser.startAnimation(pulse)
     }
 }

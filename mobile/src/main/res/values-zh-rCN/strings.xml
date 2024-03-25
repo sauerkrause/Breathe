@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">呼吸</string>
+    <string name="add_session">添加新会话</string>
+    <string name="inhale_duration">吸气持续时间</string>
+    <string name="exhale_duration">呼气持续时间</string>
+    <string name="repetitions">次</string>
+    <string name="create_session">创建会话</string>
+    <string name="breath_session">呼吸训练</string>
+    <string name="cancel">取消</string>
+    <string name="second">秒</string>
+    <string name="breathe_in">吸入</string>
+    <string name="breathe_out">呼</string>
+    <string name="direction_in">向内</string>
+    <string name="direction_out">向外</string>
+    <string name="times">次</string>
+    <plurals name="number_of_repetitions">
+        <item quantity="other">%d次</item>
+    </plurals>
+</resources>

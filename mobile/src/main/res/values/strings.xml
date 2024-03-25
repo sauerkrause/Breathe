@@ -7,9 +7,14 @@
     <string name="create_session">Create Session</string>
     <string name="breath_session">Breath Session</string>
     <string name="cancel">Cancel</string>
-    <string name="inward">s In</string>
-    <string name="outward">s Out</string>
+    <string name="second">s</string>
+    <string name="breathe_in">Breathe In</string>
+    <string name="breathe_out">Breathe Out</string>
     <string name="direction_in">In</string>
     <string name="direction_out">Out</string>
     <string name="times">Times</string>
+    <plurals name="number_of_repetitions">
+        <item quantity="one">%d Rep</item>
+        <item quantity="other">%d Reps</item>
+    </plurals>
 </resources>
