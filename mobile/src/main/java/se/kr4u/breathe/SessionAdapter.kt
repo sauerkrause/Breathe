@@ -37,10 +37,10 @@ class SessionAdapter : ListAdapter<Session, SessionAdapter.ViewHolder>(SessionsC
         }
 
         companion object {
-            fun create(parent: ViewGroup): SessionAdapter.ViewHolder {
+            fun create(parent: ViewGroup): ViewHolder {
                 val view: View = LayoutInflater.from(parent.context)
                     .inflate(R.layout.session_row_item, parent, false)
-                return SessionAdapter.ViewHolder(view)
+                return ViewHolder(view)
             }
         }
     }

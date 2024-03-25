@@ -9,7 +9,6 @@ import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
 import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -140,7 +139,7 @@ class BreathSession : AppCompatActivity(R.layout.activity_breath_session) {
         }
 
     private fun countdown(direction: Direction, duration: Int, repetitions: Int) {
-        var count = duration + 1
+        val count = duration + 1
         Log.d(TAG, count.toString())
         countdownTextView.text = count.toString()
         val fadeOut = AlphaAnimation(1f, 0f)
@@ -167,7 +166,7 @@ class BreathSession : AppCompatActivity(R.layout.activity_breath_session) {
         val pulse = when (direction) {
             Direction.IN -> ScaleAnimation(1f, 2f, 1f, 2f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
             Direction.OUT -> ScaleAnimation(2f, 1f, 2f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
-        };
+        }
         pulse.duration = when (direction) {
             Direction.OUT -> session.exhaleDuration * 1000L
             Direction.IN -> session.inhaleDuration * 1000L

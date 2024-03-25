@@ -4,7 +4,6 @@ import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
@@ -49,10 +48,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         val itemTouchHelper = ItemTouchHelper(swipeHelper)
         itemTouchHelper.attachToRecyclerView(sessionList)
 
-        sessionViewModel.allSessions.observe(this, Observer { sessions ->
+        sessionViewModel.allSessions.observe(this) { sessions ->
             sessions?.let { adapter.submitList(it) }
-
-        })
+        }
         val addSessionButton = findViewById<FloatingActionButton>(R.id.add_session)
         addSessionButton.setOnClickListener {
             addSession(addSessionButton)
