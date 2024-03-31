@@ -233,7 +233,10 @@ class BreathSession : AppCompatActivity(R.layout.activity_breath_session) {
             val effect = VibrationEffect.createWaveform(waveform, -1)
             vibrator.vibrate(effect)
         } else {
+            // Yes, this is deprecated, but cannot do it the other way before OS level 31
+            @Suppress("DEPRECATION")
             val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            @Suppress("DEPRECATION")
             vibrator.vibrate(waveform, -1)
         }
 
