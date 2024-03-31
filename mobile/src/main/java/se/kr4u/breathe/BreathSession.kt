@@ -146,6 +146,9 @@ class BreathSession : AppCompatActivity(R.layout.activity_breath_session) {
             }
         }
         job = CoroutineScope(Dispatchers.Main).launchPeriodicAsync(1000) {
+            // in case countdown doesn't run, default string to zero so when the activity times out
+            // we don't have to deal with just hiding or whatnot
+            countdownTextView.text = 0.toString()
             when (count) {
                 0 -> {
                     if (state == State.IN) {
@@ -228,16 +231,17 @@ class BreathSession : AppCompatActivity(R.layout.activity_breath_session) {
         }
         // Vibrate using the waveform depending on android version
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val vibratorManager = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-            val vibrator = vibratorManager.defaultVibrator
+            val vibratorManager = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager?
+            val vibrator = vibratorManager?.defaultVibrator
             val effect = VibrationEffect.createWaveform(waveform, -1)
-            vibrator.vibrate(effect)
+            vibrator?.vibrate(effect)
         } else {
-            // Yes, this is deprecated, but cannot do it the other way before OS level 31
             @Suppress("DEPRECATION")
-            val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            @Suppress("DEPRECATION")
-            vibrator.vibrate(waveform, -1)
+            apply {
+                val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator?
+                vibrator?.vibrate(waveform, -1)
+            }
+
         }
 
         // Animate the pulser
