@@ -17,4 +17,6 @@
     <plurals name="number_of_repetitions">
         <item quantity="other">%d次</item>
     </plurals>
+    <string name="durations_and_repetitions_cannot_be_0">数字必须非零</string>
+    <string name="done">完成</string>
 </resources>
