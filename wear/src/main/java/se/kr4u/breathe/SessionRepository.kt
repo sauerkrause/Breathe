@@ -24,6 +24,11 @@ class SessionRepository(private val sessionDao: SessionDao) {
         sessionDao.deleteSessions(session)
     }
 
+    @WorkerThread
+    suspend fun deleteAll() {
+        sessionDao.deleteAllSessions()
+    }
+
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
     suspend fun update(session: Session) {

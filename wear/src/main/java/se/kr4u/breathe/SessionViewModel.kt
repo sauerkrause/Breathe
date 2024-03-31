@@ -19,6 +19,10 @@ class SessionViewModel(private val repo: SessionRepository) : ViewModel() {
         repo.delete(session)
     }
 
+    fun deleteAll() = viewModelScope.launch {
+        repo.deleteAll()
+    }
+
     suspend fun getSession(id: Int): Session {
         return repo.getById(id)
     }

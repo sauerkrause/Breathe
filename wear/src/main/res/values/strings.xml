@@ -10,4 +10,5 @@
     <string name="direction_out">Out</string>
     <string name="repetitions">Reps</string>
     <string name="done">Done</string>
+    <string name="times">Times</string>
 </resources>

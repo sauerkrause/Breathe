@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:orientation="horizontal"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+style="@style/Widget.MaterialComponents.Badge">
+<Button
+    android:id="@+id/start_session"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_margin="8dp"
+    app:icon="@drawable/baseline_arrow_right_24"
+    app:iconPadding="0dp"
+    app:iconSize="24dp"
+    android:insetBottom="0dp"
+    android:insetTop="0dp"
+    android:insetRight="0dp"
+    android:insetLeft="0dp"
+    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.Breathe.Button.Round"
+    style="@style/Widget.MaterialComponents.Button.Icon"
+    app:iconTint="@color/icon"
+    />
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="48dp"
+    android:layout_weight="0.3"
+    android:layout_margin="8dp"
+    >
+    <TextView
+        android:id="@+id/inhale_duration"
+        android:transitionName="inhale"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="4dp"
+        android:gravity="center"
+        android:text="@string/second"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/direction_in"
+        />
+</LinearLayout>
+
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="48dp"
+    android:layout_weight="0.3"
+    android:layout_margin="8dp"
+    >
+    <TextView
+        android:id="@+id/exhale_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="4dp"
+        android:gravity="center"
+        android:text="@string/second" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/direction_out" />
+</LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="48dp"
+    android:layout_weight="0.3"
+    android:layout_margin="8dp"
+    >
+    <TextView
+        android:id="@+id/repetitions"
+        android:transitionName="reps"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="4dp"
+        android:gravity="center" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/times"
+        />
+</LinearLayout>
+</LinearLayout>
