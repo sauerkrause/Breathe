@@ -24,11 +24,9 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import se.kr4u.breathe.util.PeriodicAsync.Companion.launchPeriodicAsync
 
 class BreathSession : AppCompatActivity(R.layout.activity_breath_session) {
     enum class State {
@@ -36,7 +34,8 @@ class BreathSession : AppCompatActivity(R.layout.activity_breath_session) {
     }
 
     companion object {
-        val TAG = "BreathSession"
+        private const val TAG = "BreathSession"
+        private const val DONE_COUNTDOWN = 3
     }
 
     private val sessionViewModel: SessionViewModel by viewModels {
@@ -54,11 +53,10 @@ class BreathSession : AppCompatActivity(R.layout.activity_breath_session) {
     private var times: Int? = null
     private var state: State = State.IN
 
-/*
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putInt("count", count!!)
         outState.putInt("times", times!!)
-        outState.putInt("direction", when (state) {
+        outState.putInt("state", when (state) {
             State.OUT -> 0
             State.IN -> 1
             State.DONE -> 2
@@ -76,7 +74,7 @@ class BreathSession : AppCompatActivity(R.layout.activity_breath_session) {
         times = savedInstanceState.getInt("times")
         super.onRestoreInstanceState(savedInstanceState)
     }
- */
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         directionTextView = findViewById(R.id.direction)
@@ -161,20 +159,21 @@ class BreathSession : AppCompatActivity(R.layout.activity_breath_session) {
                             count = session.inhaleDuration
                             times = times!! - 1
                         }
+                        if (times!! == 0) {
+                            times = 1
+                            state = State.DONE
+                            changeDirection(state)
+                            count = DONE_COUNTDOWN
+                        }
+                    } else if (state == State.DONE) {
+                        times = times!! - 1
                     }
                 }
             }
             count = count!! - 1
             if (times!! > 0) {
                 countdown(state, count!!, times!!)
-            } else if (times!! == 0) {
-                Log.d(TAG, "Technically done")
-                state = State.DONE
-                changeDirection(state)
-                count = 0
-                times = -1
-                countdown(state, count!!, times!!)
-            } else if (times!! < 0){
+            } else {
                 CoroutineScope(Dispatchers.Main).launch {
                     job.cancelAndJoin()
                     this@BreathSession.finish()
@@ -182,19 +181,6 @@ class BreathSession : AppCompatActivity(R.layout.activity_breath_session) {
             }
         }
     }
-
-    fun CoroutineScope.launchPeriodicAsync(repeatMillis: Long, action: () -> Unit) =
-        this.async {
-            if (repeatMillis > 0) {
-                while (isActive) {
-                    action()
-                    Log.d(TAG, "Delaying for " + repeatMillis + " ms")
-                    delay(repeatMillis)
-                }
-            } else {
-                action()
-            }
-        }
 
     private fun countdown(state: State, duration: Int, repetitions: Int) {
         Log.d(TAG, "State = $state")

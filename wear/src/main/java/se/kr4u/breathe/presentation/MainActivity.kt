@@ -25,7 +25,7 @@ import se.kr4u.breathe.SessionViewModel
 import se.kr4u.breathe.SessionViewModelFactory
 
 class MainActivity() : AppCompatActivity(R.layout.main), AmbientLifecycleObserver {
-    override val isAmbient = true
+    override val isAmbient = false
     private val sessionViewModel: SessionViewModel by viewModels {
         SessionViewModelFactory((application as SessionApplication).repository)
     }
