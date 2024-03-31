@@ -5,4 +5,9 @@
     values-round/strings.xml for round devices.
     -->
     <string name="hello_world">From the Square world,\nHello, %1$s!</string>
+    <string name="second">s</string>
+    <string name="direction_in">In</string>
+    <string name="direction_out">Out</string>
+    <string name="repetitions">Reps</string>
+    <string name="done">Done</string>
 </resources>

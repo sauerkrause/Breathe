@@ -1,9 +1,15 @@
 package se.kr4u.breathe
 
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
@@ -25,8 +31,8 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 class BreathSession : AppCompatActivity(R.layout.activity_breath_session) {
-    enum class Direction {
-        IN, OUT
+    enum class State {
+        IN, OUT, DONE
     }
 
     companion object {
@@ -44,6 +50,33 @@ class BreathSession : AppCompatActivity(R.layout.activity_breath_session) {
     private lateinit var actionBar: Toolbar
     private lateinit var job: Deferred<Unit>
 
+    private var count: Int? = null
+    private var times: Int? = null
+    private var state: State = State.IN
+
+/*
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt("count", count!!)
+        outState.putInt("times", times!!)
+        outState.putInt("direction", when (state) {
+            State.OUT -> 0
+            State.IN -> 1
+            State.DONE -> 2
+        })
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        when(savedInstanceState.getInt("state", 1)) {
+            0 -> state = State.OUT
+            1 -> state = State.IN
+            2 -> state = State.DONE
+        }
+        count = savedInstanceState.getInt("count")
+        times = savedInstanceState.getInt("times")
+        super.onRestoreInstanceState(savedInstanceState)
+    }
+ */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         directionTextView = findViewById(R.id.direction)
@@ -55,6 +88,8 @@ class BreathSession : AppCompatActivity(R.layout.activity_breath_session) {
         setSupportActionBar(actionBar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
+
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -75,7 +110,15 @@ class BreathSession : AppCompatActivity(R.layout.activity_breath_session) {
         val id = this.intent.extras!!.getInt("Session ID")
         this.lifecycleScope.launch {
             session = sessionViewModel.getSession(id)
-            beginInhaleCountdown(session.inhaleDuration, session.repetitions)
+            if (times == null) {
+                Log.d(TAG, "Beginning countdown")
+                state = State.IN
+                Log.d(TAG, "State = $state")
+                beginCountdown(state, session.inhaleDuration, session.repetitions)
+            } else {
+                Log.d(TAG, "Resuming countdown")
+                beginCountdown(state, count!!, times!!)
+            }
         }
     }
 
@@ -86,37 +129,52 @@ class BreathSession : AppCompatActivity(R.layout.activity_breath_session) {
         }
     }
 
-    private fun beginInhaleCountdown(duration: Int, repetitions: Int) {
+    private fun beginCountdown(initialDirection: State, duration: Int, repetitions: Int) {
         directionTextView.text = resources.getText(R.string.breathe_in)
         countdownTextView.text = duration.toString()
         timesTextView.text = resources.getQuantityString(R.plurals.number_of_repetitions, repetitions, repetitions)
-        var count = duration
-        var times = repetitions
-        var direction = Direction.IN
-        changeDirection(Direction.IN)
+        count = duration
+        times = repetitions
+        state = initialDirection
+        when (state) {
+            State.IN -> if (count == session.inhaleDuration) {
+                changeDirection(state)
+            }
+            State.OUT -> if (count == session.exhaleDuration) {
+                changeDirection(state)
+            }
+            State.DONE -> {
+                changeDirection(state)
+            }
+        }
         job = CoroutineScope(Dispatchers.Main).launchPeriodicAsync(1000) {
             when (count) {
                 0 -> {
-                    if (direction == Direction.IN) {
-                        direction = Direction.OUT
-                        changeDirection(direction)
+                    if (state == State.IN) {
+                        state = State.OUT
+                        changeDirection(state)
                         count = session.exhaleDuration
-                    } else {
-                        if (times > 0) {
-                            direction = Direction.IN
-                            changeDirection(direction)
+                    } else if (state == State.OUT) {
+                        if (times!! > 0) {
+                            state = State.IN
+                            changeDirection(state)
                             count = session.inhaleDuration
-                            times--
+                            times = times!! - 1
                         }
                     }
                 }
-                else -> {
-                }
             }
-            count--
-            if (times > 0) {
-                countdown(direction, count, times)
-            } else {
+            count = count!! - 1
+            if (times!! > 0) {
+                countdown(state, count!!, times!!)
+            } else if (times!! == 0) {
+                Log.d(TAG, "Technically done")
+                state = State.DONE
+                changeDirection(state)
+                count = 0
+                times = -1
+                countdown(state, count!!, times!!)
+            } else if (times!! < 0){
                 CoroutineScope(Dispatchers.Main).launch {
                     job.cancelAndJoin()
                     this@BreathSession.finish()
@@ -138,7 +196,19 @@ class BreathSession : AppCompatActivity(R.layout.activity_breath_session) {
             }
         }
 
-    private fun countdown(direction: Direction, duration: Int, repetitions: Int) {
+    private fun countdown(state: State, duration: Int, repetitions: Int) {
+        Log.d(TAG, "State = $state")
+        directionTextView.text = when (state) {
+            State.IN -> {
+                resources.getText(R.string.breathe_in)
+            }
+            State.OUT -> {
+                resources.getText(R.string.breathe_out)
+            }
+            State.DONE -> {
+                resources.getText(R.string.done)
+            }
+        }
         val count = duration + 1
         Log.d(TAG, count.toString())
         countdownTextView.text = count.toString()
@@ -146,30 +216,51 @@ class BreathSession : AppCompatActivity(R.layout.activity_breath_session) {
         fadeOut.interpolator = AccelerateInterpolator()
         fadeOut.duration = 1000
         countdownTextView.animation = fadeOut
-
-        directionTextView.text = when (direction) {
-            Direction.IN -> {
-                resources.getText(R.string.breathe_in)
-            }
-
-            Direction.OUT -> {
-                resources.getText(R.string.breathe_out)
-            }
+        if (state != State.DONE) {
+            timesTextView.text = resources.getQuantityString(
+                R.plurals.number_of_repetitions,
+                repetitions,
+                repetitions
+            )
+        } else {
+            timesTextView.text = resources.getText(R.string.done)
         }
-        timesTextView.text = resources.getQuantityString(R.plurals.number_of_repetitions, repetitions, repetitions)
     }
 
-    private fun changeDirection(direction: Direction) {
-        // Add sounds and/or vibration here
+    private fun changeDirection(state: State) {
+        // Vibration waveform:
+        val waveform = when (state) {
+            State.IN -> {
+                longArrayOf(0L, 500L, 100L, 100L)
+            }
+            State.OUT -> {
+                longArrayOf(0L, 100L, 100L, 500L)
+            }
+            State.DONE -> {
+                longArrayOf(0L, 50L, 100L, 50L)
+            }
+        }
+        // Vibrate using the waveform depending on android version
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val vibratorManager = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            val vibrator = vibratorManager.defaultVibrator
+            val effect = VibrationEffect.createWaveform(waveform, -1)
+            vibrator.vibrate(effect)
+        } else {
+            val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            vibrator.vibrate(waveform, -1)
+        }
 
         // Animate the pulser
-        val pulse = when (direction) {
-            Direction.IN -> ScaleAnimation(1f, 2f, 1f, 2f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
-            Direction.OUT -> ScaleAnimation(2f, 1f, 2f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
+        val pulse = when (state) {
+            State.IN -> ScaleAnimation(1f, 2f, 1f, 2f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
+            State.OUT -> ScaleAnimation(2f, 1f, 2f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
+            State.DONE -> ScaleAnimation(1f, 1f, 1f, 1f, Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 1f)
         }
-        pulse.duration = when (direction) {
-            Direction.OUT -> session.exhaleDuration * 1000L
-            Direction.IN -> session.inhaleDuration * 1000L
+        pulse.duration = when (state) {
+            State.OUT -> session.exhaleDuration * 1000L
+            State.IN -> session.inhaleDuration * 1000L
+            State.DONE -> 1000L
         }
         pulse.fillAfter = true
         pulser.startAnimation(pulse)

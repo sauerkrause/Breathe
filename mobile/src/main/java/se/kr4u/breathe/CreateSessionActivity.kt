@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -51,7 +52,12 @@ class CreateSessionActivity : AppCompatActivity(R.layout.create_session) {
                 val inhale = inhaleDuration.text.toString().toInt()
                 val exhale = exhaleDuration.text.toString().toInt()
                 val repetitions = repetitions.text.toString().toInt()
-                sessionViewModel.insert(Session(0, inhale, exhale, repetitions, 0))
+                if (repetitions > 0 && inhale > 0 && exhale > 0) {
+                    sessionViewModel.insert(Session(0, inhale, exhale, repetitions, 0))
+                } else {
+                    Toast.makeText(this,
+                        getString(R.string.durations_and_repetitions_cannot_be_0), Toast.LENGTH_SHORT).show()
+                }
                 this.finish()
                 return true
             }

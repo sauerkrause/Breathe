@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 
 class SessionViewModel(private val repo: SessionRepository) : ViewModel() {
     val allSessions = repo.allSessions.asLiveData()
+    val flowAllSessions = repo.allSessions
 
     fun insert(session: Session) = viewModelScope.launch {
         repo.insert(session)

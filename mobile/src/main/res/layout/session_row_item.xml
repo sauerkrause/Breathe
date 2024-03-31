@@ -10,7 +10,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_margin="8dp"
-        app:icon="@drawable/baseline_av_timer_24"
+        app:icon="@drawable/baseline_arrow_right_24"
         app:iconPadding="0dp"
         app:iconSize="24dp"
         android:insetBottom="0dp"

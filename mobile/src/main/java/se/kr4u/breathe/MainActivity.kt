@@ -73,6 +73,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         intent.action = "se.kr4u.breathe.BEGIN_SESSION"
         intent.addCategory(Intent.CATEGORY_DEFAULT)
         intent.putExtra("Session ID", session.id)
+        session.timesUsed++
+        sessionViewModel.update(session)
         val options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, Pair(view.findViewById(R.id.repetitions), "reps"), Pair(view.findViewById(R.id.inhale_duration), "inhale")).toBundle()
         startActivity(intent, options)
     }

@@ -13,6 +13,8 @@
     <string name="direction_in">In</string>
     <string name="direction_out">Out</string>
     <string name="times">Times</string>
+    <string name="durations_and_repetitions_cannot_be_0">Durations and repetitions cannot be 0</string>
+    <string name="done">Done</string>
     <plurals name="number_of_repetitions">
         <item quantity="one">%d Rep</item>
         <item quantity="other">%d Reps</item>
